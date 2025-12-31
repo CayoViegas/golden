@@ -3,7 +3,7 @@ services:
     image: postgres:15
     container_name: golden_db
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=golden_user
       - POSTGRES_PASSWORD=golden_pass

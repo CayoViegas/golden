@@ -25,7 +25,7 @@ class Order(Base):
     # Customer Data
     customer_name: Mapped[str] = mapped_column(String(100), nullable=False)
     customer_phone: Mapped[str] = mapped_column(String(20), nullable=False)
-    customer_adress: Mapped[str] = mapped_column(Text, nullable=False)
+    customer_address: Mapped[str] = mapped_column(Text, nullable=False)
 
     # Order Meta
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
