@@ -1,0 +1,20 @@
+[tool.ruff]
+line-length = 88
+
+# E = pycodestyle errors
+# W = pycodestyle warnings
+# F = pyflakes
+# I = isort
+# B = flake8-bugbear
+select = ["E", "W", "F", "I", "B"]
+
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "alembic",
+]
+
+[tool.ruff.isort]
+known-first-party = ["app"]

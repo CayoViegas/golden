@@ -1,7 +1,10 @@
 from typing import List, Optional
-from sqlalchemy import String, Float, Boolean, Text
+
+from sqlalchemy import Boolean, Float, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base
+
 
 class Product(Base):
     __tablename__ = "products"

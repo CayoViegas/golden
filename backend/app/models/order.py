@@ -1,14 +1,18 @@
 from datetime import datetime
 from enum import Enum as PyEnum
 from typing import List, Optional
-from sqlalchemy import String, Float, DateTime, ForeignKey, Enum, Text
+
+from sqlalchemy import DateTime, Enum, Float, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base
+
 
 # Enums
 class OrderType(str, PyEnum):
     IMMEDIATE = "immediate"
     SCHEDULED = "scheduled"
+
 
 class OrderStatus(str, PyEnum):
     RECEIVED = "received"
@@ -16,6 +20,7 @@ class OrderStatus(str, PyEnum):
     READY = "ready"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
+
 
 class Order(Base):
     __tablename__ = "orders"
@@ -31,11 +36,16 @@ class Order(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     order_type: Mapped[OrderType] = mapped_column(Enum(OrderType), nullable=False)
     scheduled_for: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    status: Mapped[OrderStatus] = mapped_column(Enum(OrderStatus), default=OrderStatus.RECEIVED)
+    status: Mapped[OrderStatus] = mapped_column(
+        Enum(OrderStatus), default=OrderStatus.RECEIVED
+    )
     total_amount: Mapped[float] = mapped_column(Float, nullable=False)
 
     # Relationships
-    items: Mapped[List["OrderItem"]] = relationship(back_populates="order", cascade="all, delete-orphan")
+    items: Mapped[List["OrderItem"]] = relationship(
+        back_populates="order", cascade="all, delete-orphan"
+    )
+
 
 class OrderItem(Base):
     __tablename__ = "order_items"

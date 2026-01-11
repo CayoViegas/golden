@@ -1,5 +1,7 @@
-from pydantic import BaseModel, ConfigDict
 from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
+
 
 class ProductBase(BaseModel):
     name: str
@@ -8,8 +10,10 @@ class ProductBase(BaseModel):
     image_url: Optional[str] = None
     is_active: bool = True
 
+
 class ProductCreate(ProductBase):
     pass
+
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
@@ -17,6 +21,7 @@ class ProductUpdate(BaseModel):
     price: Optional[float] = None
     image_url: Optional[str] = None
     is_active: Optional[bool] = None
+
 
 class ProductResponse(ProductBase):
     id: int

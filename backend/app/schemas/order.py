@@ -1,11 +1,15 @@
-from pydantic import BaseModel, ConfigDict, Field
-from typing import List, Optional
 from datetime import datetime
-from app.models.order import OrderType, OrderStatus
+from typing import List, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.models.order import OrderStatus, OrderType
+
 
 class OrderItemCreate(BaseModel):
     product_id: int
     quantity: int = Field(gt=0)
+
 
 class OrderItemResponse(BaseModel):
     product_id: int
@@ -14,6 +18,7 @@ class OrderItemResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class OrderBase(BaseModel):
     customer_name: str
     customer_phone: str
@@ -21,11 +26,14 @@ class OrderBase(BaseModel):
     order_type: OrderType = OrderType.IMMEDIATE
     scheduled_for: Optional[datetime] = None
 
+
 class OrderCreate(OrderBase):
     items: List[OrderItemCreate]
 
+
 class OrderUpdateStatus(BaseModel):
     status: OrderStatus
+
 
 class OrderResponse(OrderBase):
     id: int
