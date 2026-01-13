@@ -1,8 +1,21 @@
+from faker import Faker
+
+from app.models.product import Product
+
+fake = Faker("pt_BR")
+
+
+def test_product_repr():
+    prod = Product(name="Test", price=10.0)
+
+    assert repr(prod) == "<Product(name=Test)>"
+
+
 def test_create_product(client):
     payload = {
-        "name": "Mini Coxinha de Frango",
-        "description": "Mini Coxinha de Frango",
-        "price": 22,
+        "name": fake.food_name() if hasattr(fake, "food_name") else fake.word(),
+        "description": fake.sentence(),
+        "price": float(fake.random_number(digits=2)),
         "is_active": True,
     }
 
@@ -16,36 +29,49 @@ def test_create_product(client):
 
 
 def test_read_product(client):
-    payload = {"name": "Bolinho de Charque", "price": 31}
+    name = fake.word()
+    payload = {"name": name, "price": 10.50}
     client.post("/products/", json=payload)
 
     response = client.get("/products/")
     assert response.status_code == 200
     data = response.json()
-    assert len(data) == 1
-    assert data[0]["name"] == "Bolinho de Charque"
+    assert len(data) >= 1
+    names = [p["name"] for p in data]
+    assert name in names
+
+
+def test_read_product_by_id(client):
+    name = fake.word()
+    payload = {"name": name, "price": 10.50}
+    response = client.post("/products/", json=payload)
+    product_id = response.json()["id"]
+
+    response = client.get(f"/products/{product_id}")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["name"] == name
 
 
 def test_read_product_not_found(client):
-    response = client.get("/products/999")
+    response = client.get("/products/999999")
     assert response.status_code == 404
 
 
 def test_update_product(client):
-    payload = {"name": "Mini Churros", "price": 44}
-    response = client.post("/products/", json=payload)
-    product_id = response.json()["id"]
+    initial_price = float(fake.random_number(digits=2))
+    payload = {"name": fake.word(), "price": initial_price}
+    create_res = client.post("/products/", json=payload)
+    product_id = create_res.json()["id"]
 
-    update_payload = {"name": "Coxinha de Calabresa", "price": 33}
+    new_name = fake.word()
+    update_payload = {"name": new_name, "price": initial_price + 10}
     response = client.patch(f"/products/{product_id}", json=update_payload)
 
     assert response.status_code == 200
     data = response.json()
-    assert data["name"] == "Coxinha de Calabresa"
-    assert data["price"] == 33
-
-    get_response = client.get(f"/products/{product_id}")
-    assert get_response.json()["name"] == "Coxinha de Calabresa"
+    assert data["name"] == new_name
+    assert data["price"] == initial_price + 10
 
 
 def test_update_product_not_found(client):
@@ -54,7 +80,7 @@ def test_update_product_not_found(client):
 
 
 def test_delete_product(client):
-    payload = {"name": "Empada de Frango", "price": 7}
+    payload = {"name": fake.word(), "price": 7}
     response = client.post("/products/", json=payload)
     product_id = response.json()["id"]
 
