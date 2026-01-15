@@ -1,12 +1,14 @@
 from datetime import datetime
 from enum import Enum as PyEnum
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 
 from sqlalchemy import DateTime, Enum, Float, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
+if TYPE_CHECKING:
+    from .product import Product
 
 # Enums
 class OrderType(str, PyEnum):
