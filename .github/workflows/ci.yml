@@ -32,6 +32,13 @@ jobs:
           ruff format backend/ --check
 
       - name: Run Tests with Coverage
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: test_db
+          SECRET_KEY: its_just_a_test
         run: |
           cd backend
           pytest --cov=app --cov-report=xml
